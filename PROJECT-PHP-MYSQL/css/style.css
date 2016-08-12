@@ -1,0 +1,40 @@
+
+/* 
+    Created on : 2-ago-2016, 11.08.12
+    Author     : Hidran Arias
+*/
+*{
+    font-family: 'Noto Sans',sans-serif;
+    font-size: 12px;
+}
+
+
+#table-users thead .DESC::after{
+    content:  '↓';
+    
+     color :#ff0000;
+}
+#table-users thead  .ASC::after{
+    content:'↑';
+    color :#ff0000;
+}
+#navigator div.nav-inline{
+   
+   
+}
+#main{
+     margin-top: 80PX
+}
+#navigator{
+    border:0;
+}
+#navigator nav{
+    width: 100%;
+    text-align: center
+}
+.input-group{
+    margin-bottom: 1rem;
+}
+.container{
+   /* background: red;*/
+}
