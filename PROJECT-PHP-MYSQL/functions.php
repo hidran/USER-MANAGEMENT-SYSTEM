@@ -98,7 +98,7 @@ function insertRandUsers($tot, mysqli $mysqli) {
          }
         
         $sql ="SELECT * FROM users $where ORDER BY $orderBy $orderDir LIMIT $start,$limit";
-        echo $sql;
+      //  echo $sql;
         $result = $mysqli->query($sql);
         if($result && $result->num_rows){
             $records =  $result->fetch_all(MYSQLI_ASSOC);

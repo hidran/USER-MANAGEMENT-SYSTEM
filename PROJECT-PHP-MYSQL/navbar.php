@@ -1,6 +1,6 @@
-<nav class="navbar navbar-fixed-top navbar-light  bg-faded">
+<nav class="navbar navbar-expand-lg  fixed-top navbar-dark bg-dark">
     <a class="navbar-brand" href="#"><i class="fa fa-user fa-2x"></i></a>
-    <div class="nav navbar-nav">
+    <div class="navbar-nav mr-auto">
         <a class="nav-item nav-link <?= stristr($_SERVER['PHP_SELF'],'index.php')?'active':''?>" href="index.php">
            <i class="fa fa-users fa-1x"></i>
             ELENCO UTENTI
