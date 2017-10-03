@@ -1,6 +1,6 @@
 
 
-<form style="z-index: 20" id="formUpdate" action="updateRecord.php?<?= $qString ?>" method="POST">
+<form enctype="multipart/form-data" style="z-index: 20" id="formUpdate" action="updateRecord.php?<?= $qString ?>" method="POST">
 
 
     <input type="hidden" name="action" id="action" value="<?= $id?'updateRecord':'insertRecord'?>">
@@ -28,7 +28,17 @@
 
         <input type="email" name="email" title="Inserire email" placeholder="Inserire email"  class="form-control"  value="<?= $row['email'] ?>"  id="email"  required>
     </div>
+    <div class="form-group">
+        <img width="<?=MAX_FILE_WIDTH?>"  height="<?=MAX_FILE_HEIGHT?>"
+                id="thumbnail" src="<?=empty($row['avatar'])?'images/placeholder.jpg' : AVATAR_DIR.$row['avatar']?>">
+    </div>
+    <div class="input-group margin-bottom-lg">
+        <span class="input-group-addon"><i class="fa fa-image fa-fw" aria-hidden="true"></i></span>
 
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?=MAX_FILE_SIZE?>" />
+
+        <input  onchange="previewFile(this)" type="file" name="avatar" title="Inserire avatar" placeholder="Inserire avatar"  class="form-control"  value="<?= $row['avatar'] ?>"  id="avatar" accept="image/jpeg">
+    </div>
     <div class="form-group">
         <div class="row">
             <?php if ($id) : ?>
@@ -40,7 +50,7 @@
                     </button>
                 </div>
             <?php endif; ?>
-            <div class="col-xs-<?= $id ? 6 : 12 ?> text-md-center">
+            <div class="col-md-<?= $id ? 6 : 12 ?> text-md-center">
 
                 <button   class="btn btn-success">
                     <i class="fa fa-pencil"> <?= $id ? 'AGGIORNA' : 'INSERISCI' ?></i>

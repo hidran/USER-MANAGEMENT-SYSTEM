@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/UMS.iml
+.idea/dbnavigator.xml
+.idea/inspectionProfiles/
+.idea/modules.xml
+.idea/workspace.xml
+PROJECT-PHP-MYSQL/.idea/

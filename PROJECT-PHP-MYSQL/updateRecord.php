@@ -20,7 +20,7 @@ switch ($action) {
         $result = deleteRecord($id);
         $qString = str_replace('&amp;', '&', $qString);
         $message = $result ? 'RECORD CANCELLATO CORRETTAMENTE' : 'PROBLEMI CANCELLANDO RECORD';
-        $url = "index.php?sucess=$result&message=" . urlencode($message) . '&' . $qString;
+        $url = "index.php?success=$result&message=" . urlencode($message) . '&' . $qString;
          header("Location:$url");
         break;
     case 'update':
@@ -39,7 +39,8 @@ switch ($action) {
                  'fiscalcode' =>'',
                  'email' =>'',
                  'age'=>'',
-                 'username' => ''
+                 'username' => '',
+                 'avatar'=> ''
              ];
         
             require_once 'header.php';
@@ -54,9 +55,13 @@ switch ($action) {
 
 
         $result = updateuser($_POST);
+     
+        $res =  copyAvatar($_POST['id']);
+       
         $qString = str_replace('&amp;', '&', $qString);
-        $message = $result ? 'RECORD AGGIORNATO CORRETTAMENTE' : 'PROBLEMI AGGIORNANDO RECORD';
-        $url = "index.php?sucess=$result&message=" . urlencode($message) . '&' . $qString;
+       
+        $message = ($result || $res['success'] )? 'RECORD AGGIORNATO CORRETTAMENTE' : 'PROBLEMI AGGIORNANDO RECORD';
+        $url = "index.php?success=".($result || $res['success'])." &message=" . urlencode($message) . '&' . $qString;
 
         header("Location:$url");
 
@@ -65,9 +70,17 @@ switch ($action) {
 
 
         $result = insertUser($_POST);
+        if($result){
+           $res =  copyAvatar($mysqli->insert_id);
+           if($res['success']){
+               
+           }
+        } else {
+            die($mysqli->error);
+        }
         $qString = str_replace('&amp;', '&', $qString);
         $message = $result ? 'RECORD INSERITO CORRETTAMENTE' : 'PROBLEMI INSERENDO RECORD';
-        $url = "index.php?sucess=$result&message=" . urlencode($message) . '&' . $qString;
+        $url = "index.php?success=$result&message=" . urlencode($message) . '&' . $qString;
 
         header("Location:$url");
 

@@ -22,3 +22,16 @@
             }
                 
     }
+function previewFile(fileInput){
+    var preview = document.getElementById('thumbnail');
+    var file    = fileInput.files[0];
+    var reader  = new FileReader();
+
+    reader.addEventListener("load", function () {
+        preview.src = reader.result;
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}

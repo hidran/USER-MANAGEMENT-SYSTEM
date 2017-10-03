@@ -27,9 +27,9 @@
         <input type="search" value="<?= $search ?>" name="search" id="search" class="form-control" placeholder="parametro">
         
    
-        <button  tabindex="1" class="btn btn-primary">
+        <button   tabindex="1" class="btn btn-primary">
             <i class="fa fa-search fa-fw"></i>CERCA</button>
-            <button onclick = "location.href='index.php'" class="btn  btn-outline-danger" type="reset" name="reset" id="reset"> 
+            <button  onclick = "location.href='index.php'" class="btn  btn-outline-danger" type="reset" name="reset" id="reset"> 
                 <i class="fa fa-eraser  fa-fw"></i>REIMPOSTA
             </button>
     </form>

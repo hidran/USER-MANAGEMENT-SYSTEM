@@ -59,7 +59,7 @@ $message = getFromGet('message');
     $success = getFromGet('success');
     $class = $success ? 'alert-success' : 'alert-danger';
     ?>
-    <div class="alert <?= $class ?> alert-dismissible  fade in" role="alert">
+    <div class="alert <?= $class ?> alert-dismissible" role="alert">
         <h2><?= strip_tags($message) ?></h2>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -82,6 +82,7 @@ $message = getFromGet('message');
             <th<?=$orderBy ==='username'? " class=\"$orderDir\"":''?>>
                 <a href="index.php?orderBy=username&amp;<?= $sorterParams ?>">USER NAME</a>
             </th>
+            <th>Avatar</th>
             <th<?=$orderBy ==='fiscalcode'? " class=\"$orderDir\"":''?>>
                 <a href="index.php?orderBy=fiscalcode&amp;<?= $sorterParams ?>">FISCAL CODE</a>
             </th>
@@ -110,6 +111,14 @@ $message = getFromGet('message');
                     </td>
                     <td>
                         <?= $user['username'] ?>   
+                    </td>
+                    <td>
+                        <?php
+                        if($user['avatar'] && file_exists(AVATAR_DIR.$user['avatar'])){ ?>
+                            <img class="avatar" src="<?=AVATAR_DIR.$user['avatar']?>" alt="<?=$user['avatar']?>">
+                      <?php 
+                        }
+                        ?>
                     </td>
                     <td>
                         <?= $user['fiscalcode'] ?>      

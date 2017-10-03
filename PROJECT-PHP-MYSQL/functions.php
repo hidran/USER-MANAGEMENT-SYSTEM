@@ -75,9 +75,9 @@ function insertRandUsers($tot, mysqli $mysqli) {
        $mysqli = $GLOBALS['mysqli'];
          $records = [];
          
-         $orderBy = $params['orderBy'];
+         $orderBy = $params['orderBy']? $params['orderBy'] : 'ID';
          $orderBy =  $mysqli->escape_string($orderBy);
-         $orderDir = $params['orderDir'];
+         $orderDir = $params['orderDir']?$params['orderDir'] :'DESC';
          $orderDir =  $mysqli->escape_string($orderDir);
          $start = (int)$params['start'];
          $limit = (int)$params['limit'];
@@ -149,9 +149,13 @@ function insertRandUsers($tot, mysqli $mysqli) {
          
         $sql = 'DELETE FROM users where id='.($id);
        // echo $sql;
-       
+         $user = getUser($id);
         $ret = $GLOBALS['mysqli']->query($sql);
-        return  $GLOBALS['mysqli']->affected_rows;
+        $result =  $GLOBALS['mysqli']->affected_rows;
+        if($result && file_exists(AVATAR_DIR.$user['avatar'])){
+            unlink(AVATAR_DIR.$user['avatar']);
+        }
+        return  $result;
     }
     function getUser($id){
           $result = [];
@@ -180,9 +184,52 @@ function insertRandUsers($tot, mysqli $mysqli) {
           return $mysqli->affected_rows;
        
     }
-    
+     function copyAvatar($userid){
+        $res = [
+            'success' => false,
+            'message' => 'Problemi salvando immagine'
+        ];
+         if(empty($_FILES)){
+             $res['message'] = 'Nessun file caricato';
+             return $res;
+         }
+         if($_FILES['avatar']['error']){
+            return $res;
+         }
+         if($_FILES['avatar']['size']> MAX_FILE_SIZE){
+             $res['message'] = 'Il file supera '.MAX_FILE_SIZE . ' bytes';
+             return $res;
+         }
+         if($_FILES['avatar']['type'] !='image/jpeg'){
+             $res['message'] = 'Il file non è jpeg';
+             return $res;
+         }
+         $imgResource = imagecreatefromjpeg($_FILES['avatar']['tmp_name']);
+       list($orig_w, $orig_h) =   getimagesize($_FILES['avatar']['tmp_name']);
+       $rationOrg = $orig_w/$orig_h;
+         $rationThumb = MAX_FILE_WIDTH/MAX_FILE_HEIGHT;
+          $calcWith = MAX_FILE_WIDTH;
+          $calcHeight = MAX_FILE_HEIGHT;
+         if($rationThumb > $rationOrg){
+             $calcWith = $calcWith*$rationOrg;  
+         } else {
+             $calcHeight =  $calcWith/ $rationOrg;
+         }
+         $scaleImg = imagescale($imgResource, $calcWith, $calcHeight);
+         $avatarname =  $userid.'.jpg';
+        $result =  imagejpeg($scaleImg, AVATAR_DIR.$avatarname);
+        if(!$result){
+            $res['message'] ='Impossibile salvare miniatura';
+            return $res;
+        }
+        $res['success'] = true;
+        $res['message'] ='Immagine caricata';
+        $sql = "UPDATE users set avatar='$avatarname' where id=$userid";
+        $GLOBALS['mysqli']->query($sql);
+        return $res;
+     }
       function insertUser(array $array){
-        var_dump($array);
+        //var_dump($array);
         $mysqli = $GLOBALS['mysqli'];
         
          $username = $mysqli->escape_string($array['username']);
@@ -195,7 +242,7 @@ function insertRandUsers($tot, mysqli $mysqli) {
          $sql .=" values('$username','$email' ,$age ,'$fiscalcode')";
        
           $mysqli->query($sql);
-            echo $sql;
+         //
           return $mysqli->affected_rows;
        
     }

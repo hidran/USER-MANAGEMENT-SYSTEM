@@ -31,7 +31,8 @@ CREATE TABLE `users` (
   `username` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `fiscalcode` char(16) COLLATE utf8_unicode_ci NOT NULL,
-  `age` tinyint(3) UNSIGNED NOT NULL
+  `age` tinyint(3) UNSIGNED NOT NULL,
+ `avatar` varchar(24) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

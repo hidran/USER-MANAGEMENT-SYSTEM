@@ -38,3 +38,9 @@
 .container{
    /* background: red;*/
 }
+.btn{
+    cursor: pointer;
+}
+#thumbnail, .avatar{
+    border-radius: 15px;
+}
