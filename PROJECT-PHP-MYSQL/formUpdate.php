@@ -29,7 +29,7 @@
         <input type="email" name="email" title="Inserire email" placeholder="Inserire email"  class="form-control"  value="<?= $row['email'] ?>"  id="email"  required>
     </div>
     <div class="form-group">
-        <img width="<?=MAX_FILE_WIDTH?>"  height="<?=MAX_FILE_HEIGHT?>"
+        <img width="<?=THUMB_MAX_FILE_HEIGHT?>"  height="<?=THUMB_MAX_FILE_HEIGHT?>"
                 id="thumbnail" src="<?=empty($row['avatar'])?'images/placeholder.jpg' : AVATAR_DIR.$row['avatar']?>">
     </div>
     <div class="input-group margin-bottom-lg">

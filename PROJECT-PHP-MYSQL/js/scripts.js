@@ -35,3 +35,36 @@ function previewFile(fileInput){
         reader.readAsDataURL(file);
     }
 }
+
+$(function () {
+   $('#formLogin').submit(
+       function (evt) {
+        var f = evt.target;
+         var email = f.email.value;
+         var password = f.password.value;
+         if(!email || !password){
+             alert('Please, fill in email and password');
+             return false;
+           }
+        $.ajax('verify-login.php',{
+            method:'POST',
+            data : {
+                _csrf : f['_csrf'].value,
+                email : f.email.value,
+                password : f.password.value
+            },
+            success : function (result) {
+              var res = JSON.parse(result);
+               alert(res.message);
+               if(res.success){
+                   location.href ='index.php';
+               }
+            },
+            error : function (error) {
+                alert('Error communicating with server') 
+            }
+        });
+       evt.preventDefault();
+   }
+   ); 
+});

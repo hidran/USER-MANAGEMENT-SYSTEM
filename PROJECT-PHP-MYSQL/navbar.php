@@ -33,4 +33,11 @@
                 <i class="fa fa-eraser  fa-fw"></i>REIMPOSTA
             </button>
     </form>
+    <?php if (isUserLoggedin()){ ?>
+        <ul class="nav">
+        <li class="nav-item"><?=getUserFullName()?></li>
+            <li  class="nav-item"><a href="index.php?logout=1">Logout</a></li>
+        </ul>
+    <?php } ?>
+    
 </nav>

@@ -1,7 +1,13 @@
 <?php
-//error_reporting(0);
-$recordPerPage = $search = '';
+session_start();
 require_once 'functions.php';
+verifyLogin();
+if(!empty($_GET['logout'])){
+    logoutUser();
+    header('Location: login.php');
+}
+$recordPerPage = $search = '';
+
 
 $search = getFromGet('search', '');
 
@@ -113,12 +119,24 @@ $message = getFromGet('message');
                         <?= $user['username'] ?>   
                     </td>
                     <td>
+                       
                         <?php
-                        if($user['avatar'] && file_exists(AVATAR_DIR.$user['avatar'])){ ?>
-                            <img class="avatar" src="<?=AVATAR_DIR.$user['avatar']?>" alt="<?=$user['avatar']?>">
-                      <?php 
+                     
+
+                        if($user['avatar'] && file_exists(AVATAR_DIR.$user['avatar'])){
+                            $bigImg = str_replace('.jpg','_Big.jpg', $user['avatar']);
+                            ?>
+
+                            <a class="thumbnail" href="#thumb"> <img class="thumbnail" src="<?=AVATAR_DIR.$user['avatar']?>" alt="<?=$user['avatar']?>"><span>
+
+                                   <img src="<?=AVATAR_DIR.$bigImg?>"> </span></a>
+                          
+
+
+                            <?php
                         }
                         ?>
+                      
                     </td>
                     <td>
                         <?= $user['fiscalcode'] ?>      

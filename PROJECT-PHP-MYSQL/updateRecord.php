@@ -1,7 +1,7 @@
 <?php
-
+session_start();
 require_once 'functions.php';
-
+verifyLogin();
 $action = $_REQUEST['action'];
 
 $id = !empty($_REQUEST['id'])?$_REQUEST['id'] : 0;

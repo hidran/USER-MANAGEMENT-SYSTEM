@@ -167,6 +167,7 @@ function insertRandUsers($tot, mysqli $mysqli) {
            }
            return $result;
     }
+
     function updateuser(array $array){
         var_dump($array);
         $mysqli = $GLOBALS['mysqli'];
@@ -185,6 +186,7 @@ function insertRandUsers($tot, mysqli $mysqli) {
        
     }
      function copyAvatar($userid){
+        set_time_limit(0);
         $res = [
             'success' => false,
             'message' => 'Problemi salvando immagine'
@@ -207,9 +209,9 @@ function insertRandUsers($tot, mysqli $mysqli) {
          $imgResource = imagecreatefromjpeg($_FILES['avatar']['tmp_name']);
        list($orig_w, $orig_h) =   getimagesize($_FILES['avatar']['tmp_name']);
        $rationOrg = $orig_w/$orig_h;
-         $rationThumb = MAX_FILE_WIDTH/MAX_FILE_HEIGHT;
-          $calcWith = MAX_FILE_WIDTH;
-          $calcHeight = MAX_FILE_HEIGHT;
+         $rationThumb = THUMB_MAX_FILE_WIDTH/THUMB_MAX_FILE_HEIGHT;
+          $calcWith = THUMB_MAX_FILE_WIDTH;
+          $calcHeight = THUMB_MAX_FILE_HEIGHT;
          if($rationThumb > $rationOrg){
              $calcWith = $calcWith*$rationOrg;  
          } else {
@@ -218,6 +220,9 @@ function insertRandUsers($tot, mysqli $mysqli) {
          $scaleImg = imagescale($imgResource, $calcWith, $calcHeight);
          $avatarname =  $userid.'.jpg';
         $result =  imagejpeg($scaleImg, AVATAR_DIR.$avatarname);
+         $scaleImg = imagescale($imgResource, BIG_MAX_FILE_WIDTH, BIG_MAX_FILE_HEIGHT);
+         $avatarnameBIG =  $userid.'_BIG.jpg';
+         $result =  imagejpeg($scaleImg, AVATAR_DIR.$avatarnameBIG);
         if(!$result){
             $res['message'] ='Impossibile salvare miniatura';
             return $res;
@@ -246,3 +251,64 @@ function insertRandUsers($tot, mysqli $mysqli) {
           return $mysqli->affected_rows;
        
     }
+
+function verifyUserData($email, $password, $token){
+    $result = [
+        'message' => 'User logged in',
+        'success' => true
+    ];
+    //echo $token .'='.$_SESSION['token'];
+    if($token !== $_SESSION['token']){
+        $result['message'] = 'Token mismacth';
+        $result['success'] = false;
+        return $result;
+    }
+
+    $correctEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
+    // var_dump($correctEmail);
+    if(!$correctEmail){
+        $result['message'] = '1 Wrong email or password ';
+        $result['success'] = false;
+        return $result;
+    }
+
+    //var_dump($password);
+    if(strlen($password) < 6){
+        $result['message'] = '2 Wrong email or password ';
+        $result['success'] = false;
+        return $result;
+    }
+    return $result;
+}
+
+function getUserByEmail(string $email){
+    $result = [];
+    $email = mysqli_escape_string( $GLOBALS['mysqli'], $email);
+    
+    $sql = "SELECT * FROM users where email = '$email'";
+  //  echo $sql;
+    $res = $GLOBALS['mysqli']->query($sql);
+    if($res && $res->num_rows){
+        $result = $res->fetch_assoc();
+    }
+    return $result;
+}
+
+function isUserLoggedin(){
+    return !empty($_SESSION['userData']);
+}
+function getUserFullName(){
+    if(isUserLoggedin()){
+        return $_SESSION['userData']['username'];
+    }
+}
+function logoutUser(){
+   
+    session_destroy();
+}
+function verifyLogin(){
+    if(empty($_SESSION['userData'])){
+        header('Location: login.php');
+        exit;
+    }
+}
