@@ -17,6 +17,9 @@ $qString = http_build_query($arrParams, '', '&amp;');
 
 switch ($action) {
     case 'delete':
+        if(!userCanDelete()){
+            die('You cannot modify this record');
+        }
         $result = deleteRecord($id);
         $qString = str_replace('&amp;', '&', $qString);
         $message = $result ? 'RECORD CANCELLATO CORRETTAMENTE' : 'PROBLEMI CANCELLANDO RECORD';
@@ -24,23 +27,36 @@ switch ($action) {
          header("Location:$url");
         break;
     case 'update':
+        if(!userCanModify()){
+            die('You cannot modify this record');
+        }
         $row = getUser($id);
+     
+       
         if ($row) {
             require_once 'header.php';
             $search = getFromGet('search', '');
             require_once 'navbar.php';
+           
             require_once 'formUpdate.php';
+          
             require_once 'footer.php';
+          
         }
         break;
          case 'insert':
+             if(!userCanModify()){
+                 die('You cannot modify this record');
+             }
              $row = [
                  'id' =>'',
                  'fiscalcode' =>'',
                  'email' =>'',
                  'age'=>'',
                  'username' => '',
-                 'avatar'=> ''
+                 'avatar'=> '',
+                 'password'=> '',
+                 'roletype'=> ''
              ];
         
             require_once 'header.php';
@@ -52,7 +68,9 @@ switch ($action) {
         break;
     
     case 'updateRecord':
-
+       if(!userCanModify()){
+            die('You cannot modify this record');
+       }
 
         $result = updateuser($_POST);
      
@@ -68,7 +86,9 @@ switch ($action) {
         break;
     case 'insertRecord':
 
-
+        if(!userCanModify()){
+            die('You cannot modify this record');
+        }
         $result = insertUser($_POST);
         if($result){
            $res =  copyAvatar($mysqli->insert_id);

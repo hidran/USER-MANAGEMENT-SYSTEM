@@ -34,9 +34,9 @@
             </button>
     </form>
     <?php if (isUserLoggedin()){ ?>
-        <ul class="nav">
-        <li class="nav-item"><?=getUserFullName()?></li>
-            <li  class="nav-item"><a href="index.php?logout=1">Logout</a></li>
+        <ul class="nav navbar-nav">
+        <li class="nav-item nav-link"><?=getUserFullName()?></li>
+            <li  class="nav-item  nav-link"><a href="index.php?logout=1">Logout</a></li>
         </ul>
     <?php } ?>
     

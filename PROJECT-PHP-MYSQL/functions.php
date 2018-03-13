@@ -169,19 +169,33 @@ function insertRandUsers($tot, mysqli $mysqli) {
     }
 
     function updateuser(array $array){
-        var_dump($array);
+        //var_dump($array);
         $mysqli = $GLOBALS['mysqli'];
          $id = (int)$array['id'];
          $username = $mysqli->escape_string($array['username']);
+         
          $fiscalcode = $mysqli->escape_string($array['fiscalcode']);
+         
          $email = $mysqli->escape_string($array['email']);
+         
           $age = (int)$array['age'];
-          
-        
+        $passwordhash = '';
+          if($array['password']){
+              $passwordhash = password_hash($array['password'], PASSWORD_DEFAULT);
+          }
+      
+         
+        $roletype  =  in_array($array['roletype'], getRoles()) ? $array['roletype'] : 'user'; 
          $sql = "UPDATE users set username='$username', fiscalcode='$fiscalcode'";
-         $sql .=" , age=$age, email ='$email' WHERE ID=$id";
+         $sql .=" , age=$age, email ='$email'";
+          if($passwordhash){
+              $sql .=", password='$passwordhash'";
+          }
+    
+        $sql .= ",roletype='$roletype'  WHERE ID=$id";
+       // die($sql);
           $mysqli->query($sql);
-            echo $sql;
+           // echo $sql;
           return $mysqli->affected_rows;
        
     }
@@ -241,13 +255,21 @@ function insertRandUsers($tot, mysqli $mysqli) {
          $fiscalcode = $mysqli->escape_string($array['fiscalcode']);
          $email = $mysqli->escape_string($array['email']);
           $age = (int)$array['age'];
-          
+          $password = $array['password'] ?? 'testpassword';
         
-         $sql = "INSERT INTO users (username,email,age, fiscalcode)";
-         $sql .=" values('$username','$email' ,$age ,'$fiscalcode')";
+           $passwordhash = password_hash($password, PASSWORD_DEFAULT);
        
-          $mysqli->query($sql);
-         //
+
+
+          $roletype  =  in_array($array['roletype'], getRoles()) ? $array['roletype'] : 'user';
+
+          $sql = "INSERT INTO users (username,email,age, fiscalcode, password, roletype)";
+         $sql .=" values('$username','$email' ,$age ,'$fiscalcode','$passwordhash','$roletype')";
+        
+          $res = $mysqli->query($sql);
+        if(!$res){
+            die($mysqli->error);
+        }
           return $mysqli->affected_rows;
        
     }
@@ -295,7 +317,23 @@ function getUserByEmail(string $email){
 }
 
 function isUserLoggedin(){
+    
     return !empty($_SESSION['userData']);
+}
+function getUserRole(){
+    return $_SESSION['userData']['roletype'];
+}
+function isAdmin(){
+    return $_SESSION['userData']['roletype'] == 'admin';
+}
+function isEditor(){
+    return $_SESSION['userData']['roletype'] == 'editor';
+}
+function userCanModify(){
+    return in_array($_SESSION['userData']['roletype'] ,['editor','admin']);
+}
+function userCanDelete(){
+    return isAdmin();
 }
 function getUserFullName(){
     if(isUserLoggedin()){
@@ -311,4 +349,8 @@ function verifyLogin(){
         header('Location: login.php');
         exit;
     }
+}
+function getRoles(){
+    
+     return ['user','editor', 'admin'];
 }

@@ -28,6 +28,26 @@
 
         <input type="email" name="email" title="Inserire email" placeholder="Inserire email"  class="form-control"  value="<?= $row['email'] ?>"  id="email"  required>
     </div>
+    <div class="input-group margin-bottom-lg">
+        <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+
+
+        <input type="text" name="password" title="Inserire password" placeholder="Inserire password"  class="form-control"  value=""  id="password">
+    </div>
+    <div class="input-group margin-bottom-lg">
+        <span class="input-group-addon"><i class="fa fa-users fa-fw" aria-hidden="true"></i></span>
+    
+        <select name="roletype" class="form-control" id="roletype" required>
+            <?php
+            $roletype = $row['roletype']? : 'user';
+            foreach (getRoles() as $role){
+                $selected = $role == $roletype?'selected': '';
+                echo "<option $selected value='$role'>$role</option>";
+            }
+            ?>
+            ?>
+        </select>
+    </div>
     <div class="form-group">
         <img width="<?=THUMB_MAX_FILE_HEIGHT?>"  height="<?=THUMB_MAX_FILE_HEIGHT?>"
                 id="thumbnail" src="<?=empty($row['avatar'])?'images/placeholder.jpg' : AVATAR_DIR.$row['avatar']?>">
@@ -41,7 +61,7 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <?php if ($id) : ?>
+            <?php if ($id && userCanDelete()) : ?>
                 <div class="col-xs-6 text-md-center">
                     <button  onclick="return(verifyDelete('<?= $id ?>','formUpdate'))" 
                              class="btn btn-danger">
@@ -49,13 +69,16 @@
 
                     </button>
                 </div>
-            <?php endif; ?>
+            <?php endif;
+             if(userCanModify()){
+            ?>
             <div class="col-md-<?= $id ? 6 : 12 ?> text-md-center">
 
                 <button   class="btn btn-success">
                     <i class="fa fa-pencil"> <?= $id ? 'AGGIORNA' : 'INSERISCI' ?></i>
                 </button>
             </div>
+            <?php } ?>
         </div>
     </div>
 
